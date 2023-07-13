@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Product {
+  id          String           @id @default(uuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  name        String
+  description String
+  code        String
+  categoryId  String // Foreign Key to Category
+  category    Category         @relation(fields: [categoryId], references: [id])
+  sizes       ProductSize[]
+  colors      ProductColor[]
+  images      Image[]
+
+  @@index([categoryId])
+}
+
+
+
+model ProductSize {
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sizeId    String
+  size      Size    @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+  price     Decimal
+
+  @@id([productId, sizeId])
+  @@index([productId])
+  @@index([sizeId])
+}
+
+model Size {
+  id        String        @id @default(uuid())
+  name      String
+  products  ProductSize[] // Relation to Product mode
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model ProductColor {
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  colorId   String
+  color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
+  price     Decimal
+
+  @@id([productId, colorId])
+  @@index([productId])
+  @@index([colorId])
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String
+  code      String
+  products  Product[]
+}
+
+model Color {
+  id        String         @id @default(uuid())
+  name      String
+  products  ProductColor[] // relation to Product mode
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String // URL of the image
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+
+  @@index([productId])
+}
+
+// model Topping {
+//   id        String           @id @default(uuid())
+//   createdAt DateTime         @default(now())
+//   updatedAt DateTime         @updatedAt
+//   name      String
+//   price     Decimal
+//   imageUrl  String
+//   products  ProductTopping[]
+// }
+
+// model ProductTopping {
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   toppingId String
+//   topping   Topping @relation(fields: [toppingId], references: [id], onDelete: Cascade)
+
+//   @@id([productId, toppingId])
+//   @@index([productId])
+//   @@index([toppingId])
+// }
