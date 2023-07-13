@@ -29,3 +29,24 @@ export async function POST(req: Request) {
     return new NextResponse("Internal Error ", { status: 500 });
   }
 }
+
+
+export async function GET(req: Request) {
+  try {
+    const { userId } = auth();
+
+
+    if (!userId) {
+      return new NextResponse("Unauthoried", { status: 401 });
+    }
+
+  
+
+    const store = await prismadb.store.findMany();
+
+    return NextResponse.json(store);
+  } catch (error) {
+    console.log("SROTRES_GET", error);
+    return new NextResponse("Internal Error ", { status: 500 });
+  }
+}
