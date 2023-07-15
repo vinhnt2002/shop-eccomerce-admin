@@ -9,7 +9,7 @@ export const POST = async (req: Request) => {
 
     const body = await req.json();
 
-    const { name, code, description,products } = body;
+    const { name, code,products } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -27,15 +27,14 @@ export const POST = async (req: Request) => {
       data: {
         name,
         code,
-        description,
         // products: {
         //   create: [{ product: { connect: { id: productId } } }],
         // },
-        products: {
-          createMany : {
-            data: [...products.map((product: {productId: string}) => product)]
-          }
-        }
+        // products: {
+        //   createMany : {
+        //     data: [...products.map((product: {productId: string}) => product)]
+        //   }
+        // }
         // products: {
         //   createMany :{
         //     data: productData

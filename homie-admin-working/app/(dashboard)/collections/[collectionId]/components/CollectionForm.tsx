@@ -2,35 +2,47 @@
 
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Collection, Product } from "@prisma/client";
 import { Separator } from "@radix-ui/react-separator";
+import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { z } from "zod";
 
 const formSchema = z.object({
-  // name: z.string().min(1),
-  // code: z.string().min(1),
+  name: z.string().min(1),
+  code: z.string().min(1),
 });
 
 type CollectionFormValues = z.infer<typeof formSchema>;
 
 interface CollectionFormProps {
-  // initialData: Collection | null;
-  initialData: "";
-  code: "";
-  name: "";
+  initialData: Collection | null;
+  products: Product[];
 }
 
-const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
+const CollectionForm: React.FC<CollectionFormProps> = ({
+  initialData,
+  products,
+}) => {
   const params = useParams();
   const router = useRouter();
-
+  console.log(initialData);
+  console.log(products);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -45,10 +57,11 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
 
   const defaultValues = initialData
     ? {
-        //  ...initialData
+        ...initialData,
         //spread object
       }
     : {
+        products: [],
         name: "",
         code: "",
       };
@@ -58,12 +71,41 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
     defaultValues,
   });
 
-  const onSubmit = (data: CollectionFormValues) => {
-    console.log("test submit");
+  const onSubmit = async (data: CollectionFormValues) => {
+    // console.log("test submit");
+    try {
+      if (initialData) {
+        await axios.patch(`/api/collections/${params.collectionId}`, data);
+      } else {
+        await axios.post(`/api/collections`, data);
+      }
+      router.refresh();
+      router.push(`/collections`);
+      toast.success(toastMessage);
+    } catch (error: any) {
+      toast.error("Đã có lỗi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const onDelete = () => {
-    console.log("Test delete");
+  const onDelete =async () => {
+    if (initialData)
+    try {
+      setLoading(true);
+      await axios.delete(`/api/collections/${params.categoryId}`, {
+        method: "DELETE",
+      });
+      router.refresh();
+      router.push(`/collections`);
+      toast.success("Xóa bộ sưu tập thành công.");
+    } catch (error: any) {
+      toast.error("Đã có lỗi.");
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  else return;
   };
   return (
     <>
@@ -93,16 +135,16 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
           className="space-y-8 w-full"
         >
           <div className="md:grid md:grid-cols-3 gap-8">
-            {/* <FormField
+            <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tên phân loại</FormLabel>
+                  <FormLabel>Tên bộ sưu tập</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="vd : gấu bông (viết thường tất cả)"
+                      placeholder="vd : phụ kiện (viết thường tất cả)"
                       {...field}
                       autoComplete="off"
                     />
@@ -110,8 +152,8 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
-{/* 
+            />
+            
             <FormField
               control={form.control}
               name="code"
@@ -121,7 +163,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="vd : gau-bong"
+                      placeholder="vd : phu-kien"
                       {...field}
                       autoComplete="off"
                     />
@@ -129,7 +171,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}

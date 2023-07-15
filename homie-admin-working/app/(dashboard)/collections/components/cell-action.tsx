@@ -31,20 +31,20 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     console.log("test submit");
     
-    // try {
-    //   setLoading(true);
+    try {
+      setLoading(true);
     
-    //   await fetch(`/api/categories/${data.id}`,{
-    //     method:"DELETE"
-    //   })
-    //   toast.success('xóa phân loại thành công.');
-    //   router.refresh();
-    // } catch (error) {
-    //   toast.error('Đã có lỗi.');
-    // } finally {
-    //   setLoading(false);
-    //   setOpen(false);
-    // }
+      await fetch(`/api/collections/${data.id}`,{
+        method:"DELETE"
+      })
+      toast.success('xóa bộ sưu tập thành công.');
+      router.refresh();
+    } catch (error) {
+      toast.error('Đã có lỗi.');
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
 
   const onCopy = (id: string) => {
@@ -75,7 +75,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/categories/${data.id}`)}
+            onClick={() => router.push(`/collections/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Chỉnh sửa
           </DropdownMenuItem>

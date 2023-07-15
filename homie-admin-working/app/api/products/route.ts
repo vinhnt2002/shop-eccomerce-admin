@@ -5,13 +5,12 @@ import prismadb from "@/lib/prismadb";
 
 export const GET = async (req: Request) => {
   try {
-
     const products = await prismadb.product.findMany({
       include: {
         images: true,
         sizes: true,
         category: true,
-        collections:true
+        collections: true,
       },
     });
 
@@ -28,8 +27,17 @@ export const POST = async (req: Request) => {
 
     const body = await req.json();
 
-    const { name, categoryId, images, url, sizes, sizeId, description, code,collections } =
-      body;
+    const {
+      name,
+      categoryId,
+      images,
+      url,
+      sizes,
+      sizeId,
+      description,
+      code,
+      collections,
+    } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -66,11 +74,11 @@ export const POST = async (req: Request) => {
             data: [...images.map((image: { url: string }) => image)],
           },
         },
-        collections: {
-          createMany : {
-            data: [...collections.map((collection: {collectionId: string}) => collection)]
-          }
-        },
+        // collections: {
+        //   createMany : {
+        //     data: [...collections.map((collection: {collectionId: string}) => collection)]
+        //   }
+        // },
 
         sizes: {
           // Assuming you have a relation field named `productSizes` in the `Product` model
@@ -98,12 +106,38 @@ export const DELETE = async (req: Request) => {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!ids) {
-      return new NextResponse("ids is required", { status: 400 });
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return new NextResponse("Valid IDs array is required", { status: 400 });
     }
 
+    // Step 1: Find the products to be deleted and include their associated images
+    const products = await prismadb.product.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+      include: {
+        images: true,
+      },
+    });
 
-    const products = await prismadb.product.deleteMany({
+    // Step 2: Delete images ở bên table Image nhá.   Vì 2 thằng có rằng buộc về key
+    for (const product of products) {
+      if (product.images.length > 0) {
+        const imageIds = product.images.map((image) => image.id);
+        await prismadb.image.deleteMany({
+          where: {
+            id: {
+              in: imageIds,
+            },
+          },
+        });
+      }
+    }
+
+    // Step 3: Delete the products after their associated images have been deleted
+    await prismadb.product.deleteMany({
       where: {
         id: {
           in: ids,
