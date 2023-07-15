@@ -6,6 +6,8 @@ import CollectionsClient from "./components/CollectionsClient";
 import { CollectionColumn } from "./components/columns";
 
 const CollectionPage = async () => {
+
+  
   const collections = await prismadb.collection.findMany({
     where: {},
     include: {

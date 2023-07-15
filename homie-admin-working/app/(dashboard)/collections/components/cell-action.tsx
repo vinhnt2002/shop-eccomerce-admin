@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
 import {  useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
@@ -27,6 +27,7 @@ export const CellAction: React.FC<CellActionProps> = ({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
+console.log(data);
 
   const onConfirm = async () => {
     console.log("test submit");
@@ -51,6 +52,13 @@ export const CellAction: React.FC<CellActionProps> = ({
     navigator.clipboard.writeText(id);
     toast.success('Product ID copied to clipboard.');
   }
+
+    // Function to handle the "Add to Collection" action
+    const onAddToCollection = () => {
+      // Implement the logic to add the product to a collection here
+      // You can use a modal or a dropdown to select the target collection
+      toast.success('Product added to collection.');
+    }
 
   return (
     <>
@@ -83,6 +91,13 @@ export const CellAction: React.FC<CellActionProps> = ({
             onClick={() => setOpen(true)}
           >
             <Trash className="mr-2 h-4 w-4" /> Xóa
+          </DropdownMenuItem>
+           {/* Add the "Add to Collection" option */}
+           <DropdownMenuItem
+            // onClick={onAddToCollection}
+            onClick={() => router.push(`/collections/${data.id}`)}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Cập nhật sản phẩm
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

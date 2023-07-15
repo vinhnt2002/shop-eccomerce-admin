@@ -24,7 +24,9 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { Category } from "@prisma/client";
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1).refine((value) => !/^\d/.test(value), {
+    message: "Name should not start with numbers.",
+  }),
   code: z.string().min(1),
 });
 
