@@ -24,11 +24,11 @@ export function MainNav({
       label: 'Sản phẩm',
       active: pathname === `/products${params.productId ? `/${params.productId}`:""}`,
     },
-    // {
-    //   href: `/toppings`,
-    //   label: 'Toppings',
-    //   active: pathname === `/toppings${params.toppingId ? `/${params.toppingId}`:""}`,
-    // },
+    {
+      href: `/collections`,
+      label: 'Bộ sưu tập',
+      active: pathname === `/collections${params.collectionId ? `/${params.collectionId}`:""}`,
+    },
     {
       href: `/categories`,
       label: 'Phân Loại',

@@ -20,6 +20,9 @@ export const  POST = async (req:Request)=> {
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
     }
+    if (!code) {
+      return new NextResponse("Code is required", { status: 400 });
+    }
 
     const category = await prismadb.category.create({
       data: {

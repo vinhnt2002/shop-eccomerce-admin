@@ -11,6 +11,7 @@ export const GET = async (req: Request) => {
         images: true,
         sizes: true,
         category: true,
+        collections:true
       },
     });
 
@@ -27,7 +28,7 @@ export const POST = async (req: Request) => {
 
     const body = await req.json();
 
-    const { name, categoryId, images, url, sizes, sizeId, description, code } =
+    const { name, categoryId, images, url, sizes, sizeId, description, code,collections } =
       body;
 
     if (!userId) {
@@ -64,6 +65,11 @@ export const POST = async (req: Request) => {
           createMany: {
             data: [...images.map((image: { url: string }) => image)],
           },
+        },
+        collections: {
+          createMany : {
+            data: [...collections.map((collection: {collectionId: string}) => collection)]
+          }
         },
 
         sizes: {
