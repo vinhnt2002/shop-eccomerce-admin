@@ -29,22 +29,22 @@ const CollectionsClient: React.FC<CollectionsClientProps> = ({
   const onDelete = async (ids:string[]) => {
     console.log("test delete");
     
-    try {
-      setLoading(true);
-      await fetch(`/api/collecitons`, {
-        method: "DELETE",
-        body: JSON.stringify(ids),
-      });
-      router.refresh();
-      router.push(`/collections`);
-      toast.success('Xóa thành công.');
-    } catch (error: any) {
-      toast.error('Đã có lỗi.');
-    } finally {
-      setLoading(false);
-      alertModal.onClose()
+    // try {
+    //   setLoading(true);
+    //   await fetch(`/api/collecitons`, {
+    //     method: "DELETE",
+    //     body: JSON.stringify(ids),
+    //   });
+    //   router.refresh();
+    //   router.push(`/collections`);
+    //   toast.success('Xóa thành công.');
+    // } catch (error: any) {
+    //   toast.error('Đã có lỗi.');
+    // } finally {
+    //   setLoading(false);
+    //   alertModal.onClose()
      
-    }
+    // }
   };
 
   return (
