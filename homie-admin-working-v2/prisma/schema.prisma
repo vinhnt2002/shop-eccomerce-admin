@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+//backup if not work
+// model Collection {
+//   id          String     @id @default(uuid())
+//   createdAt   DateTime   @default(now())
+//   updatedAt   DateTime   @updatedAt
+//   name        String
+//   code        String
+//   description String
+//   products    Product[]  @relation("CollectionProduct") // Relation to Product model
+// }
+
+// model Product {
+//   id          String         @id @default(uuid())
+//   createdAt   DateTime       @default(now())
+//   updatedAt   DateTime       @updatedAt
+//   name        String
+//   description String
+//   code        String
+//   categoryId  String        // Foreign Key to Category
+//   category    Category      @relation(fields: [categoryId], references: [id])
+//   collections Collection[]   @relation("CollectionProduct")// Relation to Collection model
+//   sizes       ProductSize[]
+//   colors      ProductColor[]
+//   images      Image[]
+
+//   @@index([categoryId])
+// }
+
+model Collection {
+  id          String              @id @default(uuid())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  name        String
+  code        String
+  products    CollectionProduct[]
+
+  // @@index([id]) // Add an index on the `id` field
+}
+
+model Product {
+  id          String              @id @default(uuid())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  name        String
+  description String
+  code        String
+  categoryId  String
+  category    Category            @relation(fields: [categoryId], references: [id])
+  collections CollectionProduct[]
+  orderItems  OrderItem[]   // Relation to Order model
+  sizes       ProductSize[]
+  colors      ProductColor[]
+  images      Image[]
+
+  @@index([categoryId])
+}
+
+model CollectionProduct {
+  // id           String     @id @default(uuid())
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId String
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId    String
+
+  // @@unique([collectionId, productId])
+  // @@index([collectionId]) // Add an index on the `collectionId` field
+  // @@index([productId]) // Add an index on the `productId` field
+  @@id([productId, collectionId])
+  @@index([productId])
+  @@index([collectionId])
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String
+  code      String
+  products  Product[]
+}
+
+model ProductSize {
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sizeId    String
+  size      Size    @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+  price     Decimal
+
+  @@id([productId, sizeId])
+  @@index([productId])
+  @@index([sizeId])
+}
+
+model Size {
+  id        String        @id @default(uuid())
+  name      String
+  products  ProductSize[] // Relation to Product mode
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model ProductColor {
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  colorId   String
+  color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
+  price     Decimal
+
+  @@id([productId, colorId])
+  @@index([productId])
+  @@index([colorId])
+}
+
+model Color {
+  id        String         @id @default(uuid())
+  name      String
+  products  ProductColor[] // relation to Product mode
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String // URL of the image
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+
+  @@index([productId])
+}
+
+model Order {
+  id        String    @id @default(uuid())
+  // storeId     String    // Foreign Key to Store
+  // store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
+  orderItems OrderItem[] // Relation to OrderItem model
+  isPaid     Boolean   @default(false)
+  phone      String    @default("")
+  address    String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // @@index([storeId])
+}
+
+// Intermediary for a many-to-many relationship
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String  // Foreign Key to Order
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String  // Foreign Key to Product
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
