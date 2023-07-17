@@ -22,39 +22,39 @@ export function MainNav({
     {
       href: `/products`,
       label: 'Sản phẩm',
-      // active: pathname === `/products${params.productId ? `/${params.productId}`:""}`,
-      active: pathname === `/products`,
+      active: pathname === `/products${params.productId ? `/${params.productId}`:""}`,
+      // active: pathname === `/products`,
     },
     {
       href: `/collections`,
       label: 'Bộ sưu tập',
-      // active: pathname === `/collections${params.collectionId ? `/${params.collectionId}`:""}`,
-      active: pathname === `/collecitons`,
+      active: pathname === `/collections${params.collectionId ? `/${params.collectionId}`:""}`,
+      // active: pathname === `/collecitons`,
     },
     {
       href: `/categories`,
       label: 'Phân Loại',
-      // active: pathname ===`/categories${params.categoryId ? `/${params.categoryId}`:""}`
-      active: pathname === `/categories`,
+      active: pathname ===`/categories${params.categoryId ? `/${params.categoryId}`:""}`
+      // active: pathname === `/categories`,
     
     },
     {
       href: `/sizes`,
       label: 'Sizes',
-      // active: pathname === `/sizes${params.sizeId ? `/${params.sizeId}`:""}`,
-      active: pathname === `/siezs`,
+      active: pathname === `/sizes${params.sizeId ? `/${params.sizeId}`:""}`,
+      // active: pathname === `/siezs`,
       
     },
-    // {
-    //   href: `/orders`,
-    //   label: 'Orders',
-    //   active: pathname === `/orders`,
-    // },
-    // {
-    //   href: `/settings`,
-    //   label: 'Cài đặt',
-    //   active: pathname === `/settings`,
-    // },
+    {
+      href: `/orders`,
+      label: 'Đơn Hàng',
+      active: pathname === `/orders`,
+    },
+    {
+      href: `/settings`,
+      label: 'Cài đặt',
+      active: pathname === `/settings`,
+    },
   ]
 
   return (
