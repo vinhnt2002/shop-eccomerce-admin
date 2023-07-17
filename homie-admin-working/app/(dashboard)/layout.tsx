@@ -1,25 +1,22 @@
-import { auth } from '@clerk/nextjs';
-import { redirect } from 'next/navigation';
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
-import NavBar from '@/components/NavBar';
+import NavBar from "@/components/NavBar";
 
 export default async function MainLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   const { userId } = auth();
 
   if (!userId) {
-    redirect('/sign-in');
+    redirect("/sign-in");
   }
-
-  
-
   return (
     <>
-      <NavBar/>
+      <NavBar />
       {children}
     </>
   );
-};
+}
