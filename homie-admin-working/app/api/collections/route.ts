@@ -5,15 +5,15 @@ import { NextResponse } from "next/server";
 // backup version
 export const POST = async (req: Request) => {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
     const body = await req.json();
 
     const { name, code,products } = body;
 
-    if (!userId) {
-      return new NextResponse("Unauthenticated", { status: 403 });
-    }
+    // if (!userId) {
+    //   return new NextResponse("Unauthenticated", { status: 403 });
+    // }
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -30,11 +30,15 @@ export const POST = async (req: Request) => {
         // products: {
         //   create: [{ product: { connect: { id: productId } } }],
         // },
+
+        //working
         // products: {
         //   createMany : {
         //     data: [...products.map((product: {productId: string}) => product)]
         //   }
         // }
+
+        
         // products: {
         //   createMany :{
         //     data: productData
