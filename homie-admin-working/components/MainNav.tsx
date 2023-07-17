@@ -39,16 +39,16 @@ export function MainNav({
       label: 'Sizes',
       active: pathname === `/sizes${params.sizeId ? `/${params.sizeId}`:""}`,
     },
-    {
-      href: `/orders`,
-      label: 'Orders',
-      active: pathname === `/orders`,
-    },
-    {
-      href: `/settings`,
-      label: 'Cài đặt',
-      active: pathname === `/settings`,
-    },
+    // {
+    //   href: `/orders`,
+    //   label: 'Orders',
+    //   active: pathname === `/orders`,
+    // },
+    // {
+    //   href: `/settings`,
+    //   label: 'Cài đặt',
+    //   active: pathname === `/settings`,
+    // },
   ]
 
   return (
