@@ -9,8 +9,6 @@ export const  POST = async (req:Request)=> {
 
     const body = await req.json();
 
-    
-
     const { name} = body;
 
     if (!userId) {
@@ -40,9 +38,6 @@ export const  DELETE = async (req:Request)=> {
     const { userId } = auth();
 
     const body = await req.json();
-
-    
-
     const ids = body;
 
     if (!userId) {

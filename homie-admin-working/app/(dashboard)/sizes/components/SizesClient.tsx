@@ -23,6 +23,7 @@ export const SizesClient: React.FC<SizesClientProps> = ({
 
   const router = useRouter();
   const alertModal = useAlertModal()
+  const [showDeleteButton, setShowDeleteButton]= useState(false)
 
   const [loading,setLoading] = useState(false)
 
@@ -55,7 +56,7 @@ export const SizesClient: React.FC<SizesClientProps> = ({
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading} />
+      <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading} showDeleteButton={!showDeleteButton}/>
       <Heading title="API" description="API của Sizes" />
       <Separator />
       <ApiList entityName="sizes" entityIdName="sizeId" />

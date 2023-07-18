@@ -20,10 +20,11 @@ interface ProductsClientProps {
 export const ProductsClient: React.FC<ProductsClientProps> = ({
   data
 }) => {
-  console.log(data);
+  // console.log(data);
   
   const router = useRouter();
   const alertModal = useAlertModal()
+  const [showDeleteButton, setShowDeleteButton]= useState(false)
 
   const [loading,setLoading] = useState(false)
 
@@ -57,7 +58,7 @@ export const ProductsClient: React.FC<ProductsClientProps> = ({
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading}/>
+      <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading} showDeleteButton={!showDeleteButton}/>
       <Heading title="API" description="API của Products" />
       <Separator />
       <ApiList entityName="products" entityIdName="productId" />

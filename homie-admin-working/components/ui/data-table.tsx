@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   searchKey: string;
   onDelete: (ids: string[]) => void;
   loading: boolean;
+  showDeleteButton: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
   searchKey,
   onDelete,
   loading,
+  showDeleteButton = true,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -55,6 +57,8 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   });
+
+  
 
   const alertModal = useAlertModal();
 
@@ -87,6 +91,43 @@ export function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
+        </div>
+        <div className="flex w-full items-center justify-between">
+          {showDeleteButton ? (
+            <div className="">
+              <Button
+                disabled={
+                  table.getFilteredSelectedRowModel().rows.length === 0 ||
+                  loading
+                }
+                variant={"destructive"}
+                onClick={alertModal.onOpen}
+              >
+                Xóa tất cả.
+              </Button>
+            </div>
+          ) : (
+            <div></div>
+          )}
+
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Quay lại
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Tiếp theo
+            </Button>
+          </div>
         </div>
         <div className="rounded-md border">
           <Table>
@@ -138,37 +179,7 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <div className="flex w-full items-center justify-between">
-          <div className="">
-            <Button
-              disabled={
-                table.getFilteredSelectedRowModel().rows.length === 0 || loading
-              }
-              variant={"destructive"}
-              onClick={alertModal.onOpen}
-            >
-              Xóa tất cả.
-            </Button>
-          </div>
-          <div className="flex items-center justify-end space-x-2 py-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Quay lại
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Tiếp theo
-            </Button>
-          </div>
-        </div>
+
       </div>
     </>
   );

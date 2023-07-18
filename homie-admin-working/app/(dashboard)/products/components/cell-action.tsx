@@ -75,12 +75,12 @@ export const CellAction: React.FC<CellActionProps> = ({
           <DropdownMenuItem
             onClick={() => router.push(`/products/${data.id}`)}
           >
-            <Edit className="mr-2 h-4 w-4" /> cập nhật sản phẩm
+            <Edit className="mr-2 h-4 w-4" /> Chỉnh sửa
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setOpen(true)}
           >
-            <Trash className="mr-2 h-4 w-4" /> xóa sản phẩm
+            <Trash className="mr-2 h-4 w-4" /> Xóa
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

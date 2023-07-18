@@ -124,57 +124,65 @@ export const DELETE = async (req: Request) => {
       return new NextResponse("Valid IDs array is required", { status: 400 });
     }
 
+    const products = await prismadb.product.deleteMany({
+      where:{
+        id:{
+          in:ids
+        }
+      }
+    });
+
     // Step 1: Find the products to be deleted and include their associated images
-    const products = await prismadb.product.findMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-      include: {
-        images: true,
-      },
-    });
+    // const products = await prismadb.product.findMany({
+    //   where: {
+    //     id: {
+    //       in: ids,
+    //     },
+    //   },
+    //   include: {
+    //     images: true,
+    //   },
+    // });
 
-    // // Step 2: Delete images ở bên table Image nhá.   Vì 2 thằng có rằng buộc về key
-    // for (const product of products) {
-    //   if (product.images.length > 0) {
-    //     const imageIds = product.images.map((image) => image.id);
-    //     await prismadb.image.deleteMany({
-    //       where: {
-    //         id: {
-    //           in: imageIds,
-    //         },
-    //       },
-    //     });
-    //   }
-    // }
-    // Filter products with images and collect their image IDs
-    const productsWithImages = products.filter(
-      (product) => product.images.length > 0
-    );
-    const imageIds = productsWithImages.flatMap((product) =>
-      product.images.map((image) => image.id)
-    );
+    // // // Step 2: Delete images ở bên table Image nhá.   Vì 2 thằng có rằng buộc về key
+    // // for (const product of products) {
+    // //   if (product.images.length > 0) {
+    // //     const imageIds = product.images.map((image) => image.id);
+    // //     await prismadb.image.deleteMany({
+    // //       where: {
+    // //         id: {
+    // //           in: imageIds,
+    // //         },
+    // //       },
+    // //     });
+    // //   }
+    // // }
+    // // Filter products with images and collect their image IDs
+    // const productsWithImages = products.filter(
+    //   (product) => product.images.length > 0
+    // );
+    // const imageIds = productsWithImages.flatMap((product) =>
+    //   product.images.map((image) => image.id)
+    // );
 
-    // Delete images with the collected IDs from the database
-    await prismadb.image.deleteMany({
-      where: {
-        id: {
-          in: imageIds,
-        },
-      },
-    });
-    // End step 2
+    // // Delete images with the collected IDs from the database
+    // await prismadb.image.deleteMany({
+    //   where: {
+    //     id: {
+    //       in: imageIds,
+    //     },
+    //   },
+    // });
+    // // End step 2
 
-    // Step 3: Delete the products after their associated images have been deleted
-    await prismadb.product.deleteMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-    });
+    // // Step 3: Delete the products after their associated images have been deleted
+    // await prismadb.product.deleteMany({
+    //   where: {
+    //     id: {
+    //       in: ids,
+    //     },
+    //   },
+    // });
 
     return NextResponse.json(products);
   } catch (error) {

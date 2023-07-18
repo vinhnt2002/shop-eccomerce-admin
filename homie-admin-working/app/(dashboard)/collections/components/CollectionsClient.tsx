@@ -23,6 +23,7 @@ const CollectionsClient: React.FC<CollectionsClientProps> = ({
   
   const router = useRouter();
   const alertModal = useAlertModal()
+  const [showDeleteButton, setShowDeleteButton]= useState(false)
 
   const [loading,setLoading] = useState(false)
 
@@ -57,7 +58,7 @@ const CollectionsClient: React.FC<CollectionsClientProps> = ({
       </Button>
     </div>
     <Separator />
-    <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading} />
+    <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading} showDeleteButton={!showDeleteButton}/>
     <Heading title="API" description="API của Collections" />
     <Separator />
     <ApiList entityName="collection" entityIdName="collectionId" />

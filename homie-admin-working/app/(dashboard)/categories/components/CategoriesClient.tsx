@@ -23,6 +23,8 @@ export const CategoriesClient: React.FC<CategoriesClientProps> = ({
 
   const router = useRouter();
   const alertModal = useAlertModal()
+  const [showDeleteButton, setShowDeleteButton]= useState(false)
+
 
   const [loading,setLoading] = useState(false)
   const onDelete = async (ids:string[]) => {
@@ -53,7 +55,7 @@ export const CategoriesClient: React.FC<CategoriesClientProps> = ({
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading} />
+      <DataTable searchKey="name" columns={columns} data={data} onDelete={onDelete} loading={loading} showDeleteButton={!showDeleteButton}/>
       <Heading title="API" description="API của Categories" />
       <Separator />
       <ApiList entityName="categories" entityIdName="categoryId" />
