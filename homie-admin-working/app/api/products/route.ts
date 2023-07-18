@@ -8,9 +8,18 @@ export const GET = async (req: Request) => {
     const products = await prismadb.product.findMany({
       include: {
         images: true,
-        sizes: true,
+        sizes: {
+          include: {
+            size:true
+          }
+        },
         category: true,
-        collections: true,
+        // collections: true,
+        collections: {
+          include: {
+            collection: true, // Include the collection details
+          },
+        },
       },
     });
 
@@ -36,6 +45,7 @@ export const POST = async (req: Request) => {
       sizeId,
       description,
       code,
+      price,
       collections,
     } = body;
 
@@ -53,6 +63,9 @@ export const POST = async (req: Request) => {
     if (!images) {
       return new NextResponse("images is required", { status: 400 });
     }
+    if (!price) {
+      return new NextResponse("price is required", { status: 400 });
+    }
 
     if (!categoryId) {
       return new NextResponse("category id is required", { status: 400 });
@@ -67,6 +80,7 @@ export const POST = async (req: Request) => {
       data: {
         name,
         code,
+        price,
         description,
         categoryId,
         images: {

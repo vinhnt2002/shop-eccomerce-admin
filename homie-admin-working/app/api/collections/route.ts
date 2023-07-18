@@ -35,11 +35,11 @@ export const POST = async (req: Request) => {
         // },
 
         //working
-        // products: {
-        //   createMany : {
-        //     data: [...products.map((product: {productId: string}) => product)]
-        //   }
-        // }
+        products: {
+          createMany : {
+            data: [...products.map((product: {productId: string}) => product)]
+          }
+        }
 
         
         // products: {

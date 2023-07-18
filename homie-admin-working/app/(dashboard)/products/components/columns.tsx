@@ -13,6 +13,7 @@ import { Image as PrismaImage, Category, Size } from "@prisma/client";
 export type ProductColumn = {
   id: string;
   name: string;
+  price: string;
   category: Category;
   categoryId: string;
   images: PrismaImage[];
@@ -58,6 +59,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
         {/* <span>({row.original.images.length})</span> */}
       </div>
     ),
+  },
+  {
+    accessorKey: "price",
+    header: "Giá tiền",
   },
   {
     accessorKey: "category",

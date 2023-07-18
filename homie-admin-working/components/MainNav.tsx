@@ -50,11 +50,11 @@ export function MainNav({
       label: 'Đơn Hàng',
       active: pathname === `/orders`,
     },
-    {
-      href: `/settings`,
-      label: 'Cài đặt',
-      active: pathname === `/settings`,
-    },
+    // {
+    //   href: `/settings`,
+    //   label: 'Cài đặt',
+    //   active: pathname === `/settings`,
+    // },
   ]
 
   return (

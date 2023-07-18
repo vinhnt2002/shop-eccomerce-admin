@@ -55,9 +55,11 @@ model Product {
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
   name        String
+  price       Decimal
+  // orginalPrice Decimal
   description String
   code        String
-  categoryId  String
+  categoryId  String            // fk key
   category    Category            @relation(fields: [categoryId], references: [id])
   collections CollectionProduct[]
   orderItems  OrderItem[]   // Relation to Order model

@@ -5,6 +5,7 @@ import vi from "date-fns/locale/vi";
 
 import { ProductsClient } from "./components/ProductClient";
 import { ProductColumn } from "./components/columns";
+import { formatter } from "@/lib/utils";
 
 const page = async () => {
   const products = await prismadb.product.findMany({
@@ -31,6 +32,7 @@ const page = async () => {
   const formattedProducts: ProductColumn[] = products.map((item) => ({
     id: item.id,
     name: item.name,
+    price: formatter.format(item.price.toNumber()),
     categoryId: item.categoryId,
     images: item.images,
     category: item.category,

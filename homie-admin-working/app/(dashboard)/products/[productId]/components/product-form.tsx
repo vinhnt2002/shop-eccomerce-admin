@@ -29,17 +29,13 @@ import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
-import {
-  Product,
-  Size,
-  Category,
-  Image as PrismaImage,
-} from "@prisma/client";
+import { Product, Size, Category, Image as PrismaImage } from "@prisma/client";
 import axios from "axios";
 
 const formSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
+  price: z.coerce.number().min(1),
   description: z.string().min(1),
   categoryId: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
@@ -79,10 +75,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const defaultValues = initialData
     ? {
         ...initialData,
+        price: parseFloat(String(initialData?.price)),
       }
     : {
         name: "",
         category: "",
+        price: 0,
         images: [],
         size: "",
         description: "",
@@ -101,7 +99,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       if (initialData) {
         await axios.patch(`/api/products/${params.productId}`, data);
       } else {
-        await axios.post(`/api/products`,data);
+        await axios.post(`/api/products`, data);
       }
       router.refresh();
       router.push(`/products`);
@@ -220,8 +218,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Giá tiền</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="100000"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                {/* sizeTest  Vinh fix */}
+            {/* sizeTest  Vinh fix */}
             <FormField
               control={form.control}
               name="sizeId"
