@@ -158,7 +158,7 @@ export function SelectProductTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
             type="button"
-            
+
           >
             Tiếp theo
           </Button>

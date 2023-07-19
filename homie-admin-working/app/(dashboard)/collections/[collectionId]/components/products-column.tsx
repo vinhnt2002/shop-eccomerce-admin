@@ -30,11 +30,15 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: "Tên",
   },
   {
+    accessorKey: "code",
+    header: "Mã sản phẩm",
+  },
+  {
     accessorKey: "image",
     header: "Ảnh sản phẩm",
     cell: ({ row }) => (
       <div className="flex items-center gap-x-2">
-       <Image src={row.original.images[0].url} alt="image" height={40} width={40}/>
+       <Image className="rounded-full" src={row.original.images[0].url} alt="image" height={50} width={50}/>
       </div>
     )
   },

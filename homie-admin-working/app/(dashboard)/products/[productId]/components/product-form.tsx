@@ -33,12 +33,12 @@ import { Product, Size, Category, Image as PrismaImage } from "@prisma/client";
 import axios from "axios";
 
 const formSchema = z.object({
-  name: z.string().min(1),
-  code: z.string().min(1),
-  price: z.coerce.number().min(1),
-  description: z.string().min(1),
-  categoryId: z.string().min(1),
-  images: z.object({ url: z.string() }).array(),
+  name: z.string().min(1, {message: "Hãy nhập tên sản phẩm"}),
+  code: z.string().min(1, {message: "Hãy nhập mã sản phẩm"}),
+  price: z.coerce.number().min(1, {message: "Hãy nhập giá tiền"}),
+  description: z.string().min(1, {message : "Hãy nhập mô tả"}),
+  categoryId: z.string().min(1, {message: "Hãy chọn thể loại"}),
+  images: z.object({ url: z.string() }).array().min(1, {message: "Hãy nhập ít nhất 1 ảnh"}),
   sizeId: z.string().min(1),
 });
 
@@ -162,7 +162,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             name="images"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Images</FormLabel>
+                <FormLabel>Hình ảnh</FormLabel>
                 <FormControl>
                   <ImageUpload
                     value={field.value.map((image) => image.url)}

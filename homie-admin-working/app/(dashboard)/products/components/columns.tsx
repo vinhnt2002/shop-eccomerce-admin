@@ -13,6 +13,7 @@ import { Image as PrismaImage, Category, Size } from "@prisma/client";
 export type ProductColumn = {
   id: string;
   name: string;
+  code: string;
   price: string;
   category: Category;
   categoryId: string;
@@ -43,6 +44,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: "Tên",
   },
   {
+    accessorKey: "code",
+    header: "Mã sản phẩm",
+  },
+  {
     accessorKey: "image",
     header: "Ảnh sản phẩm",
     cell: ({ row }) => (
@@ -56,7 +61,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
             className="rounded-full"
           />
         )}
-        {/* <span>({row.original.images.length})</span> */}
+        <span>({row.original.images.length})</span>
       </div>
     ),
   },
