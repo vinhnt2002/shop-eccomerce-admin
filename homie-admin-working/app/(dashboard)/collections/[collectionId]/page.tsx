@@ -28,7 +28,6 @@ const CollectionPage = async ({params} : {params: {collectionId: string}}) => {
         },
       },
       images: true,
-      collections: true
     },
     orderBy: {
       createdAt: "desc",

@@ -1,6 +1,5 @@
 "use client";
 
-import { ProductColumn } from "@/app/(dashboard)/products/components/columns";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +24,7 @@ import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { SelectProductTable } from "./select-products-data-table";
 import { columns as SelectProductColumns } from "./products-column";
+import { ProductColumn } from "@/app/(dashboard)/products/components/columns";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -45,7 +45,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
 }) => {
   const params = useParams();
   const router = useRouter();
-  console.log(initialData);
+  // console.log(initialData);
   // console.log(products);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,11 +81,14 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
   const onSubmit = async (data: CollectionFormValues) => {
     // console.log("test submit");
     try {
-      if (initialData) {
-        await axios.patch(`/api/collections/${params.collectionId}`, data);
-      } else {
+      if (!initialData) {
+        // await axios.patch(`/api/collections/${params.collectionId}`, data);
         await axios.post(`/api/collections`, data);
-      }
+
+      } 
+      // else {
+      //   await axios.post(`/api/collections`, data);
+      // }
       router.refresh();
       router.push(`/collections`);
       toast.success(toastMessage);
@@ -97,22 +100,24 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
   };
 
   const onDelete = async () => {
-    if (initialData)
-      try {
-        setLoading(true);
-        await axios.delete(`/api/collections/${params.collectionId}`, {
-          method: "DELETE",
-        });
-        router.refresh();
-        router.push(`/collections`);
-        toast.success("Xóa bộ sưu tập thành công.");
-      } catch (error: any) {
-        toast.error("Đã có lỗi.");
-      } finally {
-        setLoading(false);
-        setOpen(false);
-      }
-    else return;
+    console.log("tét");
+    
+    // if (initialData)
+    //   try {
+    //     setLoading(true);
+    //     await axios.delete(`/api/collections/${params.collectionId}`, {
+    //       method: "DELETE",
+    //     });
+    //     router.refresh();
+    //     router.push(`/collections`);
+    //     toast.success("Xóa bộ sưu tập thành công.");
+    //   } catch (error: any) {
+    //     toast.error("Đã có lỗi.");
+    //   } finally {
+    //     setLoading(false);
+    //     setOpen(false);
+    //   }
+    // else return;
   };
   return (
     <>
