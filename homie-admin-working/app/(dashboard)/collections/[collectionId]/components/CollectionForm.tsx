@@ -81,14 +81,12 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
   const onSubmit = async (data: CollectionFormValues) => {
     // console.log("test submit");
     try {
-      if (!initialData) {
-        // await axios.patch(`/api/collections/${params.collectionId}`, data);
-        await axios.post(`/api/collections`, data);
-
+      if (initialData) {
+        await axios.patch(`/api/collections/${params.collectionId}`, data);
       } 
-      // else {
-      //   await axios.post(`/api/collections`, data);
-      // }
+      else {
+        await axios.post(`/api/collections`, data);
+      }
       router.refresh();
       router.push(`/collections`);
       toast.success(toastMessage);
@@ -100,24 +98,22 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
   };
 
   const onDelete = async () => {
-    console.log("tét");
-    
-    // if (initialData)
-    //   try {
-    //     setLoading(true);
-    //     await axios.delete(`/api/collections/${params.collectionId}`, {
-    //       method: "DELETE",
-    //     });
-    //     router.refresh();
-    //     router.push(`/collections`);
-    //     toast.success("Xóa bộ sưu tập thành công.");
-    //   } catch (error: any) {
-    //     toast.error("Đã có lỗi.");
-    //   } finally {
-    //     setLoading(false);
-    //     setOpen(false);
-    //   }
-    // else return;
+    if (initialData)
+      try {
+        setLoading(true);
+        await axios.delete(`/api/collections/${params.collectionId}`, {
+          method: "DELETE",
+        });
+        router.refresh();
+        router.push(`/collections`);
+        toast.success("Xóa bộ sưu tập thành công.");
+      } catch (error: any) {
+        toast.error("Đã có lỗi.");
+      } finally {
+        setLoading(false);
+        setOpen(false);
+      }
+    else return;
   };
   return (
     <>

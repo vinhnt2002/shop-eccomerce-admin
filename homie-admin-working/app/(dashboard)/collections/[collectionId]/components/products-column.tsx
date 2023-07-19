@@ -4,12 +4,8 @@ import Image from "next/image"
 
 import { ColumnDef } from "@tanstack/react-table"
 
-
-
 import { Checkbox } from "@/components/ui/checkbox"
 import { ProductColumn } from "@/app/(dashboard)/products/components/columns";
-
-
 
 export const columns: ColumnDef<ProductColumn>[] = [
   {
