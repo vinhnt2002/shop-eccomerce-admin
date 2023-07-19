@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -27,7 +27,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   searchKey: string;
   onValueChange: (event: string[]) => void;
-  initialData?: string[] ;
+  initialData: string[] | undefined;
 }
 
 export function SelectProductTable<TData, TValue>({
@@ -59,7 +59,7 @@ export function SelectProductTable<TData, TValue>({
     return data.id;
   });
 
-  const handleInitialSelectedIds = useCallback(() => {
+  const handleInitialSelectedIds = () => {
     if (!initialData) return;
     table.getRowModel().rows.map((row) => {
       const data: any = { ...row.original };
@@ -67,15 +67,15 @@ export function SelectProductTable<TData, TValue>({
         row.toggleSelected(true);
       }
     });
-  }, [initialData]); // Include initialData in the dependency array
+  };
 
   useEffect(() => {
     onValueChange(seletedIds);
-  }, [rowSelection, onValueChange]); // Include rowSelection and onValueChange in the dependency array
+  }, [rowSelection]);
 
   useEffect(() => {
     handleInitialSelectedIds();
-  }, [handleInitialSelectedIds]);
+  }, []);
 
   return (
     <>
@@ -158,7 +158,7 @@ export function SelectProductTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
             type="button"
-
+            
           >
             Tiếp theo
           </Button>
