@@ -31,6 +31,57 @@ export async function POST(req: Request) {
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
+  ///TEST
+
+  // const orderItemsToUpdate: { id: string; quantity: number }[] = [];
+
+  // products.forEach((product) => {
+  //   const quantity = 1; // Assuming 1 quantity for each product for now
+
+  //   line_items.push({
+  //     quantity,
+  //     price_data: {
+  //       currency: 'VND',
+  //       product_data: {
+  //         name: product.name,
+  //       },
+  //       unit_amount: product.price.toNumber() * 100
+  //     }
+  //   });
+
+  //   const orderItem = product.orderItems.find((item) => item.product.id === product.id);
+  //   if (orderItem) {
+  //     orderItemsToUpdate.push({ id: orderItem.id, quantity });
+  //   }
+  // });
+
+  // const orderItemsUpdatePromises = orderItemsToUpdate.map(({ id, quantity }) => {
+  //   return prismadb.orderItem.update({
+  //     where: { id },
+  //     data: { quantity }
+  //   });
+  // });
+
+  // await Promise.all(orderItemsUpdatePromises);
+
+  // const orderItemsToCreate = productIds.filter(productId => {
+  //   return !orderItemsToUpdate.some(item => item.id === productId);
+  // }).map(productId => ({
+  //   product: { connect: { id: productId } },
+  //   quantity: 1 // Assuming 1 quantity for each product for now
+  // }));
+
+  // const order = await prismadb.order.create({
+  //   data: {
+  //     isPaid: false,
+  //     orderItems: {
+  //       create: orderItemsToCreate
+  //     }
+  //   }
+  // });
+
+  // END TEST
+
   products.forEach((product) => {
     line_items.push({
       quantity: 1,
@@ -44,6 +95,15 @@ export async function POST(req: Request) {
     });
   });
 
+  // const orderItems = productIds.map((productId: string) => ({
+  //   product: {
+  //     connect: {
+  //       id: productId
+  //     }
+  //   },
+  //   quantity: 1 
+  // }));
+
   const order = await prismadb.order.create({
     data: {
       isPaid: false,
@@ -55,7 +115,10 @@ export async function POST(req: Request) {
             }
           }
         }))
-      }
+      },
+      // orderItems: {
+      //   create: orderItems
+      // }
     }
   });
 

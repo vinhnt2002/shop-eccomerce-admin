@@ -16,16 +16,20 @@ export async function GET(
         id: params.collectionId,
       },
       include: {
-        products: true,
+        products: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
 
     // if (!collection) {
     //     return new NextResponse("Collection not found", { status: 404 });
     //   }
-  
+
     //   const productIds = collection.products.map((product) => product.id);
-  
+
     //   const products = await prismadb.product.findMany({
     //     where: {
     //       id: {
@@ -33,7 +37,7 @@ export async function GET(
     //       },
     //     },
     //   });
-  
+
     //   // Include the associated products in the collection object
     //   collection.products = products;
 
@@ -54,12 +58,9 @@ export async function DELETE(
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
-
     if (!params.collectionId) {
-      return new NextResponse("Product id is required", { status: 400 });
+      return new NextResponse("Collection id is required", { status: 400 });
     }
-
-    // step 1 :findUnique the collection to delete
     const collection = await prismadb.collection.findUnique({
       where: {
         id: params.collectionId,
@@ -68,26 +69,32 @@ export async function DELETE(
         products: true,
       },
     });
+
     if (!collection) {
       return new NextResponse("Collection not found", { status: 404 });
     }
 
-     // Step 2: Delete the collection along with its associated products
-     await prismadb.collection.delete({
+    //  ************   TỐI ƯU SAU CHỖ NÀY ********************
+    for (const product of collection.products) {
+      await prismadb.product.delete({
+        where: {
+          id: product.productId,
+        },
+      });
+    }
+
+    await prismadb.collection.delete({
       where: {
         id: params.collectionId,
       },
-      include: {
-        products: true,
-      },
     });
 
-    
-
-    return NextResponse.json(collection);
+    return new NextResponse(
+      "Collection and associated products deleted successfully",
+      { status: 200 }
+    );
   } catch (error) {
-    console.log("[PRODUCT_DELETE]", error);
+    console.log("[COLLECTION_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
-

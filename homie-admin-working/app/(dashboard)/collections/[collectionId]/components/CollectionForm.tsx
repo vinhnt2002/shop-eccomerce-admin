@@ -1,5 +1,6 @@
 "use client";
 
+import { ProductColumn } from "@/app/(dashboard)/products/components/columns";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,7 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Collection, Product } from "@prisma/client";
+import { Collection, CollectionProduct, Product } from "@prisma/client";
 import { Separator } from "@radix-ui/react-separator";
 import axios from "axios";
 import { Trash } from "lucide-react";
@@ -22,17 +23,20 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
+import { SelectProductTable } from "./select-products-data-table";
+import { columns as SelectProductColumns } from "./products-column";
 
 const formSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
+  productIds: z.string().array(),
 });
 
 type CollectionFormValues = z.infer<typeof formSchema>;
 
 interface CollectionFormProps {
-  initialData: Collection | null;
-  products: Product[];
+  initialData: (Collection & { products: CollectionProduct[] }) | null;
+  products: ProductColumn[];
 }
 
 const CollectionForm: React.FC<CollectionFormProps> = ({
@@ -42,7 +46,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
   const params = useParams();
   const router = useRouter();
   console.log(initialData);
-  console.log(products);
+  // console.log(products);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -59,9 +63,12 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
     ? {
         ...initialData,
         //spread object
+        productIds: initialData.products.map((product) => {
+          return product.productId;
+        }),
       }
     : {
-        products: [],
+        productIds: [],
         name: "",
         code: "",
       };
@@ -89,23 +96,23 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
     }
   };
 
-  const onDelete =async () => {
+  const onDelete = async () => {
     if (initialData)
-    try {
-      setLoading(true);
-      await axios.delete(`/api/collections/${params.categoryId}`, {
-        method: "DELETE",
-      });
-      router.refresh();
-      router.push(`/collections`);
-      toast.success("Xóa bộ sưu tập thành công.");
-    } catch (error: any) {
-      toast.error("Đã có lỗi.");
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
-  else return;
+      try {
+        setLoading(true);
+        await axios.delete(`/api/collections/${params.collectionId}`, {
+          method: "DELETE",
+        });
+        router.refresh();
+        router.push(`/collections`);
+        toast.success("Xóa bộ sưu tập thành công.");
+      } catch (error: any) {
+        toast.error("Đã có lỗi.");
+      } finally {
+        setLoading(false);
+        setOpen(false);
+      }
+    else return;
   };
   return (
     <>
@@ -153,7 +160,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="code"
@@ -173,6 +180,25 @@ const CollectionForm: React.FC<CollectionFormProps> = ({
               )}
             />
           </div>
+          <FormField
+            control={form.control}
+            name="productIds"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Chọn sản phẩm </FormLabel>
+                <SelectProductTable
+                  onValueChange={field.onChange}
+                  data={products}
+                  columns={SelectProductColumns}
+                  searchKey="name"
+                  initialData={initialData?.products.map(
+                    (product) => product.productId
+                  )}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>

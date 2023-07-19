@@ -9,7 +9,7 @@ export const POST = async (req: Request) => {
 
     const body = await req.json();
 
-    const { name, code,products } = body;
+    const { name, code,products, productIds } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -20,6 +20,10 @@ export const POST = async (req: Request) => {
     }
     if (!code) {
       return new NextResponse("Code is required", { status: 400 });
+    }
+
+    if(!productIds) {
+      return new NextResponse("products id is required " , {status: 400})
     }
 
     // const productData = products.map((product: { productId: string }) => ({
@@ -35,11 +39,13 @@ export const POST = async (req: Request) => {
         // },
 
         //working
-        // products: {
-        //   createMany : {
-        //     data: [...products.map((product: {productId: string}) => product)]
-        //   }
-        // }
+        products: {
+          createMany : {
+            data:productIds.map((id:string)=>{
+              return {productId:id}
+            })
+          }
+        }
 
         
         // products: {
@@ -65,7 +71,11 @@ export const GET = async (req: Request) => {
   try {
     const collections = await prismadb.collection.findMany({
       include: {
-        products:true
+        products: {
+          include: {
+            product: true
+          }
+        }
       }
     });
     return NextResponse.json(collections);

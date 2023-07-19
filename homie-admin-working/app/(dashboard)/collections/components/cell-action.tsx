@@ -93,12 +93,6 @@ console.log(data);
             <Trash className="mr-2 h-4 w-4" /> Xóa
           </DropdownMenuItem>
            {/* Add the "Add to Collection" option */}
-           <DropdownMenuItem
-            // onClick={onAddToCollection}
-            onClick={() => router.push(`/collections/${data.id}`)}
-          >
-            <Plus className="mr-2 h-4 w-4" /> Cập nhật sản phẩm
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
