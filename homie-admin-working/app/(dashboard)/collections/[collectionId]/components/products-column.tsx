@@ -33,15 +33,15 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "name",
     header: "Tên",
   },
-  {
-    accessorKey: "image",
-    header: "Ảnh sản phẩm",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-x-2">
-       <Image src={row.original.images[0].url} alt="image" height={40} width={40}/>
-      </div>
-    )
-  },
+  // {
+  //   accessorKey: "image",
+  //   header: "Ảnh sản phẩm",
+  //   cell: ({ row }) => (
+  //     <div className="flex items-center gap-x-2">
+  //      <Image src={row.original.images[0].url} alt="image" height={40} width={40}/>
+  //     </div>
+  //   )
+  // },
   {
     accessorKey: "price",
     header: "Giá",
