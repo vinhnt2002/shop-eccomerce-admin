@@ -113,7 +113,6 @@ export async function PATCH(
         name,
         price,
         categoryId,
-        description,
 
         // sizeId: {},
         sizes: {
@@ -130,7 +129,6 @@ export async function PATCH(
         id: params.productId,
       },
       data: {
-        description,
         images: {
           createMany: {
             data: [...images.map((image: { url: string }) => image)],

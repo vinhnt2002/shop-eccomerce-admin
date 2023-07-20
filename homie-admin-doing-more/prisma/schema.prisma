@@ -40,12 +40,12 @@ datasource db {
 // }
 
 model Collection {
-  id        String              @id @default(uuid())
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
-  name      String
-  code      String
-  products  CollectionProduct[]
+  id          String              @id @default(uuid())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  name        String
+  code        String
+  products    CollectionProduct[]
 
   // @@index([id]) // Add an index on the `id` field
 }
@@ -57,12 +57,12 @@ model Product {
   name        String
   price       Decimal
   // orginalPrice Decimal
-  description String              @db.LongText
+  description String
   code        String
-  categoryId  String // fk key
+  categoryId  String            // fk key
   category    Category            @relation(fields: [categoryId], references: [id])
   collections CollectionProduct[]
-  orderItems  OrderItem[] // Relation to Order model
+  orderItems  OrderItem[]   // Relation to Order model
   sizes       ProductSize[]
   colors      ProductColor[]
   images      Image[]
@@ -76,6 +76,7 @@ model CollectionProduct {
   collectionId String
   product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId    String
+
 
   @@id([productId, collectionId])
   @@index([productId])
@@ -143,15 +144,15 @@ model Image {
 }
 
 model Order {
-  id         String      @id @default(uuid())
+  id        String    @id @default(uuid())
   // storeId     String    // Foreign Key to Store
   // store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
   orderItems OrderItem[] // Relation to OrderItem model
-  isPaid     Boolean     @default(false)
-  phone      String      @default("")
-  address    String      @default("")
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  isPaid     Boolean   @default(false)
+  phone      String    @default("")
+  address    String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   // @@index([storeId])
 }
@@ -159,11 +160,12 @@ model Order {
 // Intermediary for a many-to-many relationship
 model OrderItem {
   id        String  @id @default(uuid())
-  orderId   String // Foreign Key to Order
+  orderId   String  // Foreign Key to Order
   order     Order   @relation(fields: [orderId], references: [id])
-  productId String // Foreign Key to Product
+  productId String  // Foreign Key to Product
   product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
 }
+
