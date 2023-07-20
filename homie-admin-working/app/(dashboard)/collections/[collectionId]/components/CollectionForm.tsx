@@ -27,8 +27,8 @@ import { columns as SelectProductColumns } from "./products-column";
 import { ProductColumn } from "@/app/(dashboard)/products/components/columns";
 
 const formSchema = z.object({
-  name: z.string().min(1),
-  code: z.string().min(1),
+  name: z.string().min(1, {message: "Hãy nhập tên bộ sưu tập"}),
+  code: z.string().min(1, {message: "Hãy nhập mã bộ sưu tập"}),
   productIds: z.string().array(),
 });
 

@@ -78,55 +78,73 @@ export async function DELETE(
 }
 
       // wait to doing
-// export async function PATCH(
-//   req: Request,
-//   { params }: { params: { collectionId: string } }
-// ) {
-//   try {
-//     const { userId } = auth();
+export async function PATCH(
+  req: Request,
+  { params }: { params: { collectionId: string } }
+) {
+  try {
+    const { userId } = auth();
 
-//     const body = await req.json();
+    const body = await req.json();
 
-//     const { name, code } = body;
+    const { name, code , products,productIds} = body;
 
-//     if (!userId) {
-//       return new NextResponse("Unauthenticated", { status: 403 });
-//     }
+    if (!userId) {
+      return new NextResponse("Unauthenticated", { status: 403 });
+    }
 
-//     if (!params.collectionId) {
-//       return new NextResponse("Product id is required", { status: 400 });
-//     }
+    if (!params.collectionId) {
+      return new NextResponse("Product id is required", { status: 400 });
+    }
 
-//     if (!name) {
-//       return new NextResponse("Name is required", { status: 400 });
-//     }
+    if (!name) {
+      return new NextResponse("Name is required", { status: 400 });
+    }
 
-//     if (!code) {
-//       return new NextResponse("Code is required", { status: 400 });
-//     }
+    if (!code) {
+      return new NextResponse("Code is required", { status: 400 });
+    }
 
-//     await prismadb.product.update({
-//       where: {
-//         id: params.collectionId,
-//       },
-//       data: {
-//         name,
-//         code,
-//       },
-//     });
+    if(!productIds) {
+      return new NextResponse("products id is required " , {status: 400})
+    }
 
-//     const product = await prismadb.product.update({
-//       where: {
-//         id: params.collectionId,
-//       },
-//       data: {},
-//     });
+    await prismadb.collection.update({
+      where: {
+        id: params.collectionId,
+      },
+      data: {
+        name,
+        code,
+        products:{
+          deleteMany:{}
+        }
+      },
+    });
 
-//     return NextResponse.json(product);
-//   } catch (error) {
-//     console.log("[PRODUCT_PATCH]", error);
-//     return new NextResponse("Internal error", { status: 500 });
-//   }
-// }
+    const collection = await prismadb.collection.update({
+      where: {
+        id: params.collectionId,
+      },
+      data: {
+        products: {
+          createMany : {
+            data:productIds.map((id:string)=>{
+              return {productId:id}
+            })
+          }
+        }
+      },
+      include:{
+        products:true
+      }
+    });
+
+    return NextResponse.json(collection);
+  } catch (error) {
+    console.log("[PRODUCT_PATCH]", error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}
 
 

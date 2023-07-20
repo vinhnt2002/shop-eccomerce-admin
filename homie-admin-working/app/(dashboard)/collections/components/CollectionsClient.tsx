@@ -19,7 +19,7 @@ interface CollectionsClientProps {
 const CollectionsClient: React.FC<CollectionsClientProps> = ({
   data
 }) => {
-  console.log(data);
+  // console.log(data);
   
   const router = useRouter();
   const alertModal = useAlertModal()

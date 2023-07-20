@@ -17,6 +17,7 @@ interface ProductsClientProps {
   data: ProductColumn[];
 };
 
+
 export const ProductsClient: React.FC<ProductsClientProps> = ({
   data
 }) => {

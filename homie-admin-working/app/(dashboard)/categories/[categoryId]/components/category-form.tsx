@@ -25,9 +25,9 @@ import { Category } from "@prisma/client";
 
 const formSchema = z.object({
   name: z.string().min(1).refine((value) => !/^\d/.test(value), {
-    message: "Name should not start with numbers.",
+    message: "Hãy nhập tên loại sản phẩm",
   }),
-  code: z.string().min(1),
+  code: z.string().min(1, {message: "Hãy nhập mã loại sản phẩm"}),
 });
 
 type CategoryFormValues = z.infer<typeof formSchema>;
