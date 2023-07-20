@@ -53,17 +53,16 @@ export async function POST(req: Request) {
 
     // Hàm dưới là dùng để cập nhật trạng thái lại thôi mình không cần thì bỏ dc cái isArchived
 
-    // const productIds = order.orderItems.map((orderItem) => orderItem.productId);
-    // await prismadb.product.updateMany({
-    //   where: {
-    //     id: {
-    //       in: [...productIds],
-    //     },
-    //   },
-    //   data: {
-    //     isArchived: true
-    //   }
-    // });
+    const productIds = order.orderItems.map((orderItem) => orderItem.productId);
+    await prismadb.product.updateMany({
+      where: {
+        id: {
+          in: [...productIds],
+        },
+      },
+      data: {
+      }
+    });
   }
 
   return new NextResponse(null, { status: 200 });
