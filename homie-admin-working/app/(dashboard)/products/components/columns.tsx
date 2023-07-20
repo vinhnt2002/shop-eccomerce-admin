@@ -51,17 +51,16 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "image",
     header: "Ảnh sản phẩm",
     cell: ({ row }) => (
-      <div className="flex items-center gap-x-2 ">
+      <div className="flex items-center justify-center gap-x-2 relative min-h-[50px] w-[60px]">
         {row.original.images.length > 0 && (
           <Image
             src={row.original.images[0].url}
             alt="image"
-            height={50}
-            width={50}
+            fill
             className="rounded-full"
           />
         )}
-        <span>({row.original.images.length})</span>
+        <span className="absolute right-[-22px]">({row.original.images.length})</span>
       </div>
     ),
   },
