@@ -114,6 +114,7 @@ export async function PATCH(
         price,
         categoryId,
         description,
+        code,
 
         // sizeId: {},
         sizes: {

@@ -11,34 +11,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-//backup if not work
-// model Collection {
-//   id          String     @id @default(uuid())
-//   createdAt   DateTime   @default(now())
-//   updatedAt   DateTime   @updatedAt
-//   name        String
-//   code        String
-//   description String
-//   products    Product[]  @relation("CollectionProduct") // Relation to Product model
-// }
-
-// model Product {
-//   id          String         @id @default(uuid())
-//   createdAt   DateTime       @default(now())
-//   updatedAt   DateTime       @updatedAt
-//   name        String
-//   description String
-//   code        String
-//   categoryId  String        // Foreign Key to Category
-//   category    Category      @relation(fields: [categoryId], references: [id])
-//   collections Collection[]   @relation("CollectionProduct")// Relation to Collection model
-//   sizes       ProductSize[]
-//   colors      ProductColor[]
-//   images      Image[]
-
-//   @@index([categoryId])
-// }
-
 model Collection {
   id        String              @id @default(uuid())
   createdAt DateTime            @default(now())
@@ -57,7 +29,7 @@ model Product {
   name        String
   price       Decimal
   // orginalPrice Decimal
-  description String              @db.LongText
+  description String
   code        String
   categoryId  String // fk key
   category    Category            @relation(fields: [categoryId], references: [id])
@@ -152,18 +124,55 @@ model Order {
   address    String      @default("")
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  userId     String
+
+  user User @relation(fields: [userId], references: [id])
 
   // @@index([storeId])
+
+  @@index([userId])
 }
 
 // Intermediary for a many-to-many relationship
 model OrderItem {
   id        String  @id @default(uuid())
   orderId   String // Foreign Key to Order
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order     Order   @relation(fields: [orderId], references: [id])
   productId String // Foreign Key to Product
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String?
+  email     String?
+  image     String?
+  password  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  orders    Order[]
+  accounts  Account[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
