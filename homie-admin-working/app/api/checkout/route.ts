@@ -104,7 +104,7 @@ export async function POST(req: Request) {
   //   quantity: 1 
   // }));
 
-  const order = await prismadb.order.create({
+  const order = await prismadb.orderBill.create({
     data: {
       userId,
       isPaid: false,

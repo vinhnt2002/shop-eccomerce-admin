@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,8 +15,6 @@ model Collection {
   name      String
   code      String
   products  CollectionProduct[]
-
-  // @@index([id]) // Add an index on the `id` field
 }
 
 model Product {
@@ -28,13 +23,12 @@ model Product {
   updatedAt   DateTime            @updatedAt
   name        String
   price       Decimal
-  // orginalPrice Decimal
   description String
   code        String
-  categoryId  String // fk key
+  categoryId  String
   category    Category            @relation(fields: [categoryId], references: [id])
   collections CollectionProduct[]
-  orderItems  OrderItem[] // Relation to Order model
+  orderItems  OrderItem[]
   sizes       ProductSize[]
   colors      ProductColor[]
   images      Image[]
@@ -43,11 +37,10 @@ model Product {
 }
 
 model CollectionProduct {
-  // id           String     @id @default(uuid())
-  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
-  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId    String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([productId, collectionId])
   @@index([productId])
@@ -65,10 +58,10 @@ model Category {
 
 model ProductSize {
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   sizeId    String
-  size      Size    @relation(fields: [sizeId], references: [id], onDelete: Cascade)
   price     Decimal
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      Size    @relation(fields: [sizeId], references: [id], onDelete: Cascade)
 
   @@id([productId, sizeId])
   @@index([productId])
@@ -78,17 +71,17 @@ model ProductSize {
 model Size {
   id        String        @id @default(uuid())
   name      String
-  products  ProductSize[] // Relation to Product mode
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+  products  ProductSize[]
 }
 
 model ProductColor {
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   colorId   String
-  color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
   price     Decimal
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
 
   @@id([productId, colorId])
   @@index([productId])
@@ -98,47 +91,41 @@ model ProductColor {
 model Color {
   id        String         @id @default(uuid())
   name      String
-  products  ProductColor[] // relation to Product mode
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+  products  ProductColor[]
 }
 
 model Image {
   id        String   @id @default(uuid())
-  url       String // URL of the image
+  url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId])
 }
 
-model Order {
+model OrderBill {
   id         String      @id @default(uuid())
-  // storeId     String    // Foreign Key to Store
-  // store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
-  orderItems OrderItem[] // Relation to OrderItem model
   isPaid     Boolean     @default(false)
   phone      String      @default("")
   address    String      @default("")
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   userId     String
-
-  user User @relation(fields: [userId], references: [id])
-
-  // @@index([storeId])
+  user    User            @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
 
   @@index([userId])
 }
 
-// Intermediary for a many-to-many relationship
 model OrderItem {
   id        String  @id @default(uuid())
-  orderId   String // Foreign Key to Order
-  order     Order   @relation(fields: [orderId], references: [id])
-  productId String // Foreign Key to Product
+  orderId   String
+  productId String
+  orderbill     OrderBill   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
@@ -153,7 +140,7 @@ model User {
   password  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  orders    Order[]
+  orderbills     OrderBill[]
   accounts  Account[]
 }
 
@@ -170,8 +157,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
