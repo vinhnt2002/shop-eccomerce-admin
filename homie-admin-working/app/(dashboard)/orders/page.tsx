@@ -9,7 +9,7 @@ import { OrderClient } from "./components/client";
 
 const OrdersPage = async (
 ) => {
-  const orders = await prismadb.orderBill.findMany({
+  const orders = await prismadb.order.findMany({
     where: {},
     include: {
       orderItems: {

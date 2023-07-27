@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 
 export const getTotalRevenue = async () => {
-  const paidOrders = await prismadb.orderBill.findMany({
+  const paidOrders = await prismadb.order.findMany({
     where: {
       isPaid: true
     },
