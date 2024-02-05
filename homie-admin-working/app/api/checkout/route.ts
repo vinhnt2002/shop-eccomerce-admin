@@ -120,7 +120,7 @@ export async function POST(req: Request) {
       // orderItems: {
       //   create: orderItems
       // }
-    }
+    },
   });
 
   const session = await stripe.checkout.sessions.create({

@@ -115,8 +115,17 @@ model Order {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   userId     String
-  user    User            @relation(fields: [userId], references: [id])
+  user       User        @relation(fields: [userId], references: [id])
   orderItems OrderItem[]
+
+  @@index([userId])
+}
+
+model OrderHistory {
+  id     String @id @default(uuid())
+  userId String
+
+  data Json
 
   @@index([userId])
 }
@@ -140,7 +149,7 @@ model User {
   password  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  orders     Order[]
+  orders    Order[]
   accounts  Account[]
 }
 
